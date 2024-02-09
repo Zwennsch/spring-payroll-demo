@@ -14,7 +14,6 @@ class EmployeeNotFoundAdvice {
     @ResponseBody
     // configures the advice to only respond if an EmployeeNotFoundException is thrown.
     @ExceptionHandler(EmployeeNotFoundException.class)
-    // says to issue an HttpStatus.NOT_FOUND i.e. an HTTP 404
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String employeeNotFoundHandler(EmployeeNotFoundException exception){
         return exception.getMessage();

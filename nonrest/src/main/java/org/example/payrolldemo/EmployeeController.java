@@ -1,10 +1,7 @@
 package org.example.payrolldemo;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import java.util.List;
 
-import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
+// @RestController indicates that the data returned by each method will be written straight into the response body instead of rendering a template.
 @RestController
 class EmployeeController {
     
@@ -40,17 +37,10 @@ class EmployeeController {
 
     // Single item
     @GetMapping("/employees/{id}")
-    // The return type is now an EntityModel<Employee>. This makes the approach more generic and includes a collection of links from Spring HATEOAS
-    EntityModel<Employee> one(@PathVariable Long id) {
+    Employee one(@PathVariable Long id){
 
-        Employee employee = repository.findById(id)
+        return repository.findById(id)
             .orElseThrow(() -> new EmployeeNotFoundException(id));
-
-        return EntityModel.of(employee, 
-        // creates a 
-            linkTo(methodOn(EmployeeController.class).one(id)).withSelfRel(),
-            linkTo(methodOn(EmployeeController.class).all()).withRel("employees")
-            );
     }
 
     @PutMapping("/employees/{id}")
