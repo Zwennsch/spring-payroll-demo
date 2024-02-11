@@ -34,4 +34,6 @@ build/
 
 ### personal stuff ###
 .personalInfo.txt
+/personal_info/
+
 

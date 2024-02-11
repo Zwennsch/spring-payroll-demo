@@ -3,7 +3,9 @@ package org.example.payrolldemo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +30,14 @@ class EmployeeController {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/employees")
-    List<Employee> all() {
-        return repository.findAll();
+    CollectionModel<EntityModel<Employee>> all(){
+        List<EntityModel<Employee>> employees = repository.findAll().stream()
+            .map(employee -> EntityModel.of(employee,
+                linkTo(methodOn(EmployeeController.class).one(employee.getId())).withSelfRel(),
+                linkTo(methodOn(EmployeeController.class).all()).withRel("employees")))
+            .collect(Collectors.toList());
+
+        return CollectionModel.of(employees, linkTo(methodOn(EmployeeController.class).all()).withSelfRel());
     }
     // end::get-aggregate-root[]
 
@@ -45,7 +53,7 @@ class EmployeeController {
 
         Employee employee = repository.findById(id)
             .orElseThrow(() -> new EmployeeNotFoundException(id));
-
+        // This is different from the non-rest version, which directly returned the employee object. 
         return EntityModel.of(employee, 
         // creates a 
             linkTo(methodOn(EmployeeController.class).one(id)).withSelfRel(),
