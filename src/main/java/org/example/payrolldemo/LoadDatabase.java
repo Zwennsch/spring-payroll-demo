@@ -18,8 +18,8 @@ public class LoadDatabase {
 
         // here two Entities are created and stored in the database
         return args -> {
-            log.info("Preloading " + repository.save(new Employee("Sven Schröder", "coder")));
-            log.info("Preloading " + repository.save(new Employee("Anke Mauser", "mum")));
+            log.info("Preloading " + repository.save(new Employee("Sven",  "Schröder", "coder")));
+            log.info("Preloading " + repository.save(new Employee("Anke" ,"Mauser", "mum")));
         };
     }
 }
